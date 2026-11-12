@@ -1,0 +1,17 @@
+{
+  "name": "POC .NET Parse Date (.NET 8)",
+  "image": "mcr.microsoft.com/devcontainers/dotnet:8.0",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.csdevkit"
+      ],
+      "settings": {
+        "dotnet.defaultSolution": "PocDotnetParseDate/PocDotnetParseDate.slnx"
+      }
+    }
+  },
+  "postCreateCommand": "dotnet restore PocDotnetParseDate/PocDotnetParseDate.App.csproj",
+  "remoteUser": "vscode"
+}
