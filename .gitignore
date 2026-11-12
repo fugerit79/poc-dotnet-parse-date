@@ -1,0 +1,42 @@
+## Build and output directories
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio & MSBuild cache/temporary files
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.userprefs
+
+## JetBrains Rider / IntelliJ files
+.idea/
+*.sln.iml
+
+## Test execution and coverage artifacts
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+## User-specific / Local settings
+appsettings*.local.json
+appsettings.Development.json
+secrets.json
+
+## Package manager caches
+*.nuget.props
+*.nuget.targets
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
