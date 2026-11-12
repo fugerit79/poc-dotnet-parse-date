@@ -1,0 +1,142 @@
+================================================================================
+   POC .NET: Parsing Date XML con Offset e Analisi Day Shift (Generalizzato)   
+================================================================================
+Fuso orario locale macchina : (UTC+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna
+Offset fuso orario attuale  : 01:00:00
+
+--------------------------------------------------------------------------------
+CASO #1: <doc><dataNascita>1942-02-08+02:00</dataNascita></doc>
+--------------------------------------------------------------------------------
+Valore testuale letto : "1942-02-08+02:00" (Giorno nominale atteso: 8)
+
+--- 1. XmlSerializer ---
+  [Approccio A (System.DateTime)]
+    Data/Ora formattata : 1942-02-07 23:00:00 +01:00
+    Giorno (.Day)       : 7
+    Dettagli            : DateTimeKind = Local (convertito automaticamente all'ora locale)
+    Esito               : ATTENZIONE: Valore scalato al giorno 7 anziché 8! (Shift causato da conversione a ora locale/DST)
+
+  [Approccio B (System.DateTimeOffset)]
+    Data/Ora formattata : 1942-02-08 00:00:00 +02:00
+    Giorno (.Day)       : 8
+    Dettagli            : Offset = 02:00:00 (preserva l'offset originale senza shift)
+    Esito               : OK: Il giorno è preservato correttamente (8)
+
+--- 2. XDocument & Parsing Diretto ---
+  [XDocument -> DateTime.Parse]
+    Data/Ora formattata : 1942-02-07 23:00:00 +01:00
+    Giorno (.Day)       : 7
+    Dettagli            : DateTimeKind = Local
+    Esito               : ATTENZIONE: Valore scalato al giorno 7 anziché 8! (Shift causato da conversione a ora locale/DST)
+
+  [XDocument -> DateTime.Parse (RoundtripKind)]
+    Data/Ora formattata : 1942-02-07 23:00:00 +01:00
+    Giorno (.Day)       : 7
+    Dettagli            : DateTimeKind = Local (se con offset != UTC, DateTime converte comunque in Local)
+    Esito               : ATTENZIONE: Valore scalato al giorno 7 anziché 8! (Shift causato da conversione a ora locale/DST)
+
+  [XDocument -> DateTimeOffset.Parse]
+    Data/Ora formattata : 1942-02-08 00:00:00 +02:00
+    Giorno (.Day)       : 8
+    Dettagli            : Offset = 02:00:00 (raccomandato per preservare il valore originale)
+    Esito               : OK: Il giorno è preservato correttamente (8)
+
+
+--------------------------------------------------------------------------------
+CASO #2: <doc><dataNascita>2001-07-01+02:00</dataNascita></doc>
+--------------------------------------------------------------------------------
+Valore testuale letto : "2001-07-01+02:00" (Giorno nominale atteso: 1)
+
+--- 1. XmlSerializer ---
+  [Approccio A (System.DateTime)]
+    Data/Ora formattata : 2001-07-01 00:00:00 +02:00
+    Giorno (.Day)       : 1
+    Dettagli            : DateTimeKind = Local (convertito automaticamente all'ora locale)
+    Esito               : OK: Il giorno è preservato correttamente (1)
+
+  [Approccio B (System.DateTimeOffset)]
+    Data/Ora formattata : 2001-07-01 00:00:00 +02:00
+    Giorno (.Day)       : 1
+    Dettagli            : Offset = 02:00:00 (preserva l'offset originale senza shift)
+    Esito               : OK: Il giorno è preservato correttamente (1)
+
+--- 2. XDocument & Parsing Diretto ---
+  [XDocument -> DateTime.Parse]
+    Data/Ora formattata : 2001-07-01 00:00:00 +02:00
+    Giorno (.Day)       : 1
+    Dettagli            : DateTimeKind = Local
+    Esito               : OK: Il giorno è preservato correttamente (1)
+
+  [XDocument -> DateTime.Parse (RoundtripKind)]
+    Data/Ora formattata : 2001-07-01 00:00:00 +02:00
+    Giorno (.Day)       : 1
+    Dettagli            : DateTimeKind = Local (se con offset != UTC, DateTime converte comunque in Local)
+    Esito               : OK: Il giorno è preservato correttamente (1)
+
+  [XDocument -> DateTimeOffset.Parse]
+    Data/Ora formattata : 2001-07-01 00:00:00 +02:00
+    Giorno (.Day)       : 1
+    Dettagli            : Offset = 02:00:00 (raccomandato per preservare il valore originale)
+    Esito               : OK: Il giorno è preservato correttamente (1)
+
+
+--------------------------------------------------------------------------------
+CASO #3: <doc><dataNascita>2001-02-08+01:00</dataNascita></doc>
+--------------------------------------------------------------------------------
+Valore testuale letto : "2001-02-08+01:00" (Giorno nominale atteso: 8)
+
+--- 1. XmlSerializer ---
+  [Approccio A (System.DateTime)]
+    Data/Ora formattata : 2001-02-08 00:00:00 +01:00
+    Giorno (.Day)       : 8
+    Dettagli            : DateTimeKind = Local (convertito automaticamente all'ora locale)
+    Esito               : OK: Il giorno è preservato correttamente (8)
+
+  [Approccio B (System.DateTimeOffset)]
+    Data/Ora formattata : 2001-02-08 00:00:00 +01:00
+    Giorno (.Day)       : 8
+    Dettagli            : Offset = 01:00:00 (preserva l'offset originale senza shift)
+    Esito               : OK: Il giorno è preservato correttamente (8)
+
+--- 2. XDocument & Parsing Diretto ---
+  [XDocument -> DateTime.Parse]
+    Data/Ora formattata : 2001-02-08 00:00:00 +01:00
+    Giorno (.Day)       : 8
+    Dettagli            : DateTimeKind = Local
+    Esito               : OK: Il giorno è preservato correttamente (8)
+
+  [XDocument -> DateTime.Parse (RoundtripKind)]
+    Data/Ora formattata : 2001-02-08 00:00:00 +01:00
+    Giorno (.Day)       : 8
+    Dettagli            : DateTimeKind = Local (se con offset != UTC, DateTime converte comunque in Local)
+    Esito               : OK: Il giorno è preservato correttamente (8)
+
+  [XDocument -> DateTimeOffset.Parse]
+    Data/Ora formattata : 2001-02-08 00:00:00 +01:00
+    Giorno (.Day)       : 8
+    Dettagli            : Offset = 01:00:00 (raccomandato per preservare il valore originale)
+    Esito               : OK: Il giorno è preservato correttamente (8)
+
+
+================================================================================
+ANALISI E CONFRONTO TECNICO TRA LE DATE:
+1. Caso Invernale con offset +02:00 (1942-02-08+02:00):
+   - A febbraio in Italia/Europa (CET) l'ora solare ha offset UTC+01:00.
+   - 1942-02-08 00:00:00+02:00 convertito in ora locale (+01:00) scala a 1942-02-07 23:00:00.
+   - Risultato: .Day si sposta all'indietro a 7 (BUG critico su date di nascita!).
+
+2. Caso Estivo con offset +02:00 (2001-07-01+02:00):
+   - A luglio in Italia/Europa (CEST) l'ora legale (DST) ha offset UTC+02:00.
+   - 2001-07-01 00:00:00+02:00 coincide con l'offset estivo locale, quindi .Day resta 1;
+     tuttavia scalerebbe al 30 giugno se eseguito su server o container in UTC (UTC+0).
+
+3. Caso Invernale con offset standard +01:00 (2001-02-08+01:00):
+   - A febbraio l'offset solare standard (CET) è UTC+01:00.
+   - 2001-02-08 00:00:00+01:00 coincide esattamente con l'offset solare della macchina locale.
+   - Risultato: .Day resta 8 sia con DateTime sia con DateTimeOffset.
+
+CONCLUSIONE:
+   Con 'System.DateTime', la correttezza del giorno dipende in modo aleatorio dalla
+   coincidenza tra l'offset nel documento e le regole DST/fuso orario locale.
+   'System.DateTimeOffset' elimina qualsiasi ambiguità preservando sempre il giorno nominale.
+================================================================================

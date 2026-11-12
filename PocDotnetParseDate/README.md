@@ -104,3 +104,12 @@ dotnet run -- "<doc><dataNascita>1990-01-01+03:00</dataNascita></doc>"
 # Oppure semplicemente la stringa data:
 dotnet run -- "1942-02-08+02:00"
 ```
+
+---
+
+## 6. Esempio Completo di Output
+
+Un log completo dell'esecuzione dell'applicazione con tutti i tre casi di test è consultabile nel file dedicato:
+- [sample-output.txt](sample-output.txt)
+
+Il file contiene la trascrizione integrale dell'output a console generato dal comando `dotnet run`, con la formattazione completa (`yyyy-MM-dd HH:mm:ss zzz`), i valori del giorno `.Day`, le proprietà `DateTimeKind` / `Offset` e la diagnosi con avvisi di shift.
